@@ -1,0 +1,474 @@
+{
+  "dataset_summary": {
+    "num_personas": 4,
+    "total_sessions": 20,
+    "total_turns": 240,
+    "noise_turns": 164,
+    "noise_turn_ratio_pct": 68.3,
+    "explicit_fact_overrides": 21,
+    "total_probes": 60,
+    "probes_per_category": 15
+  },
+  "baselines": [
+    {
+      "system": "Sliding Window (Last 10 Turns)",
+      "total_probes": 60,
+      "correct_probes": 3,
+      "overall_accuracy_pct": 5.0,
+      "category_accuracy_pct": {
+        "single_hop_long_range": 0.0,
+        "fact_conflict_override": 6.67,
+        "temporal_historical_lineage": 0.0,
+        "multi_hop_graph_reasoning": 13.33
+      },
+      "conflict_resolution_precision_pct": 100.0,
+      "stale_conflict_leakage_pct": 0.0,
+      "avg_prompt_tokens": 179.6,
+      "p50_latency_ms": 0.011,
+      "p95_latency_ms": 0.016,
+      "failure_attribution": {
+        "missing_recall_evicted_or_unretrieved": 56,
+        "incomplete_historical_lineage": 1
+      },
+      "sample_failures": [
+        {
+          "probe_id": "p1_lr_1",
+          "category": "single_hop_long_range",
+          "question": "Who is Alex Chen's academic advisor?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "Prof. Hao Zhang"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p1_lr_2",
+          "category": "single_hop_long_range",
+          "question": "Which courses has Alex Chen completed?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "CS224N",
+            "MIT 6.824"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p1_lr_3",
+          "category": "single_hop_long_range",
+          "question": "What is Alex Chen's OS preference?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "Arch Linux"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p1_lr_4",
+          "category": "single_hop_long_range",
+          "question": "Which natural languages does Alex Chen speak?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "Mandarin",
+            "Japanese"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p1_co_1",
+          "category": "fact_conflict_override",
+          "question": "Which city does Alex Chen currently live in?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "Shanghai"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        }
+      ],
+      "token_reduction_vs_full_pct": 82.75
+    },
+    {
+      "system": "Full History Context Stuffing",
+      "total_probes": 60,
+      "correct_probes": 37,
+      "overall_accuracy_pct": 61.67,
+      "category_accuracy_pct": {
+        "single_hop_long_range": 93.33,
+        "fact_conflict_override": 6.67,
+        "temporal_historical_lineage": 53.33,
+        "multi_hop_graph_reasoning": 93.33
+      },
+      "conflict_resolution_precision_pct": 6.67,
+      "stale_conflict_leakage_pct": 93.33,
+      "avg_prompt_tokens": 1041.1,
+      "p50_latency_ms": 0.038,
+      "p95_latency_ms": 0.099,
+      "failure_attribution": {
+        "stale_conflict_hallucination": 15,
+        "incomplete_historical_lineage": 7,
+        "wrong_or_incomplete_entity": 1
+      },
+      "sample_failures": [
+        {
+          "probe_id": "p1_co_1",
+          "category": "fact_conflict_override",
+          "question": "Which city does Alex Chen currently live in?",
+          "prediction": "Beijing",
+          "expected": [
+            "Shanghai"
+          ],
+          "reason": "stale_conflict_hallucination"
+        },
+        {
+          "probe_id": "p1_co_2",
+          "category": "fact_conflict_override",
+          "question": "What is Alex Chen's primary database right now?",
+          "prediction": "PostgreSQL (or MySQL)",
+          "expected": [
+            "PostgreSQL"
+          ],
+          "reason": "stale_conflict_hallucination"
+        },
+        {
+          "probe_id": "p1_co_3",
+          "category": "fact_conflict_override",
+          "question": "Which libraries does Alex Chen actively use now?",
+          "prediction": "PyTorch, LangChain",
+          "expected": [
+            "PyTorch"
+          ],
+          "reason": "stale_conflict_hallucination"
+        },
+        {
+          "probe_id": "p1_co_4",
+          "category": "fact_conflict_override",
+          "question": "What is Alex Chen's current GPU budget?",
+          "prediction": "4x A100 (320GB) (or Dual RTX 4090 (48GB))",
+          "expected": [
+            "4x A100 (320GB)"
+          ],
+          "reason": "stale_conflict_hallucination"
+        },
+        {
+          "probe_id": "p1_th_2",
+          "category": "temporal_historical_lineage",
+          "question": "How did Alex Chen's city of residence evolve across sessions?",
+          "prediction": "Beijing -> Shanghai",
+          "expected": [
+            "Beijing",
+            "Hangzhou",
+            "Shanghai"
+          ],
+          "reason": "incomplete_historical_lineage"
+        }
+      ],
+      "token_reduction_vs_full_pct": 0.0
+    },
+    {
+      "system": "Flat Vector RAG Memory (Top-5 Chunks)",
+      "total_probes": 60,
+      "correct_probes": 31,
+      "overall_accuracy_pct": 51.67,
+      "category_accuracy_pct": {
+        "single_hop_long_range": 93.33,
+        "fact_conflict_override": 13.33,
+        "temporal_historical_lineage": 53.33,
+        "multi_hop_graph_reasoning": 46.67
+      },
+      "conflict_resolution_precision_pct": 15.38,
+      "stale_conflict_leakage_pct": 73.33,
+      "avg_prompt_tokens": 94.6,
+      "p50_latency_ms": 5.063,
+      "p95_latency_ms": 5.951,
+      "failure_attribution": {
+        "stale_conflict_hallucination": 12,
+        "missing_recall_evicted_or_unretrieved": 9,
+        "incomplete_historical_lineage": 6,
+        "broken_multi_hop_chain": 1,
+        "wrong_or_incomplete_entity": 1
+      },
+      "sample_failures": [
+        {
+          "probe_id": "p1_co_1",
+          "category": "fact_conflict_override",
+          "question": "Which city does Alex Chen currently live in?",
+          "prediction": "Beijing",
+          "expected": [
+            "Shanghai"
+          ],
+          "reason": "stale_conflict_hallucination"
+        },
+        {
+          "probe_id": "p1_co_2",
+          "category": "fact_conflict_override",
+          "question": "What is Alex Chen's primary database right now?",
+          "prediction": "MySQL",
+          "expected": [
+            "PostgreSQL"
+          ],
+          "reason": "stale_conflict_hallucination"
+        },
+        {
+          "probe_id": "p1_co_3",
+          "category": "fact_conflict_override",
+          "question": "Which libraries does Alex Chen actively use now?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "PyTorch"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p1_th_2",
+          "category": "temporal_historical_lineage",
+          "question": "How did Alex Chen's city of residence evolve across sessions?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "Beijing",
+            "Hangzhou",
+            "Shanghai"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p1_th_3",
+          "category": "temporal_historical_lineage",
+          "question": "What was Alex Chen's primary database before switching to PostgreSQL?",
+          "prediction": "ClickHouse",
+          "expected": [
+            "MongoDB"
+          ],
+          "reason": "incomplete_historical_lineage"
+        }
+      ],
+      "token_reduction_vs_full_pct": 90.91
+    },
+    {
+      "system": "Ours: Hierarchical Temporal Graph + Vector (theta=0.25)",
+      "total_probes": 60,
+      "correct_probes": 58,
+      "overall_accuracy_pct": 96.67,
+      "category_accuracy_pct": {
+        "single_hop_long_range": 93.33,
+        "fact_conflict_override": 100.0,
+        "temporal_historical_lineage": 93.33,
+        "multi_hop_graph_reasoning": 100.0
+      },
+      "conflict_resolution_precision_pct": 100.0,
+      "stale_conflict_leakage_pct": 0.0,
+      "avg_prompt_tokens": 147.3,
+      "p50_latency_ms": 6.285,
+      "p95_latency_ms": 7.948,
+      "failure_attribution": {
+        "wrong_or_incomplete_entity": 1,
+        "incomplete_historical_lineage": 1
+      },
+      "sample_failures": [
+        {
+          "probe_id": "p3_lr_2",
+          "category": "single_hop_long_range",
+          "question": "Which database courses has Zhao Kai completed?",
+          "prediction": "PostgreSQL",
+          "expected": [
+            "CMU 15-445",
+            "CMU 15-721"
+          ],
+          "reason": "wrong_or_incomplete_entity"
+        },
+        {
+          "probe_id": "p4_th_3",
+          "category": "temporal_historical_lineage",
+          "question": "What was Lin Wei's initial dietary preference?",
+          "prediction": "Lactose-Free",
+          "expected": [
+            "Halal"
+          ],
+          "reason": "incomplete_historical_lineage"
+        }
+      ],
+      "theta": 0.25,
+      "active_edges_retained": 61,
+      "active_edges_archived": 98,
+      "graph_compression_pct": 61.64,
+      "token_reduction_vs_full_pct": 85.85
+    }
+  ],
+  "decay_pareto_sweep": [
+    {
+      "system": "Ours (theta=0.00, No Decay Pruning)",
+      "total_probes": 60,
+      "correct_probes": 58,
+      "overall_accuracy_pct": 96.67,
+      "category_accuracy_pct": {
+        "single_hop_long_range": 93.33,
+        "fact_conflict_override": 100.0,
+        "temporal_historical_lineage": 93.33,
+        "multi_hop_graph_reasoning": 100.0
+      },
+      "conflict_resolution_precision_pct": 100.0,
+      "stale_conflict_leakage_pct": 0.0,
+      "avg_prompt_tokens": 148.0,
+      "p50_latency_ms": 7.066,
+      "p95_latency_ms": 10.438,
+      "failure_attribution": {
+        "wrong_or_incomplete_entity": 1,
+        "incomplete_historical_lineage": 1
+      },
+      "sample_failures": [
+        {
+          "probe_id": "p3_lr_2",
+          "category": "single_hop_long_range",
+          "question": "Which database courses has Zhao Kai completed?",
+          "prediction": "PostgreSQL",
+          "expected": [
+            "CMU 15-445",
+            "CMU 15-721"
+          ],
+          "reason": "wrong_or_incomplete_entity"
+        },
+        {
+          "probe_id": "p4_th_3",
+          "category": "temporal_historical_lineage",
+          "question": "What was Lin Wei's initial dietary preference?",
+          "prediction": "Lactose-Free",
+          "expected": [
+            "Halal"
+          ],
+          "reason": "incomplete_historical_lineage"
+        }
+      ],
+      "theta": 0.0,
+      "active_edges_retained": 159,
+      "active_edges_archived": 0,
+      "graph_compression_pct": 0.0,
+      "token_reduction_vs_full_pct": 85.78
+    },
+    {
+      "system": "Ours: Hierarchical Temporal Graph + Vector (theta=0.25)",
+      "total_probes": 60,
+      "correct_probes": 58,
+      "overall_accuracy_pct": 96.67,
+      "category_accuracy_pct": {
+        "single_hop_long_range": 93.33,
+        "fact_conflict_override": 100.0,
+        "temporal_historical_lineage": 93.33,
+        "multi_hop_graph_reasoning": 100.0
+      },
+      "conflict_resolution_precision_pct": 100.0,
+      "stale_conflict_leakage_pct": 0.0,
+      "avg_prompt_tokens": 147.3,
+      "p50_latency_ms": 6.285,
+      "p95_latency_ms": 7.948,
+      "failure_attribution": {
+        "wrong_or_incomplete_entity": 1,
+        "incomplete_historical_lineage": 1
+      },
+      "sample_failures": [
+        {
+          "probe_id": "p3_lr_2",
+          "category": "single_hop_long_range",
+          "question": "Which database courses has Zhao Kai completed?",
+          "prediction": "PostgreSQL",
+          "expected": [
+            "CMU 15-445",
+            "CMU 15-721"
+          ],
+          "reason": "wrong_or_incomplete_entity"
+        },
+        {
+          "probe_id": "p4_th_3",
+          "category": "temporal_historical_lineage",
+          "question": "What was Lin Wei's initial dietary preference?",
+          "prediction": "Lactose-Free",
+          "expected": [
+            "Halal"
+          ],
+          "reason": "incomplete_historical_lineage"
+        }
+      ],
+      "theta": 0.25,
+      "active_edges_retained": 61,
+      "active_edges_archived": 98,
+      "graph_compression_pct": 61.64,
+      "token_reduction_vs_full_pct": 85.85
+    },
+    {
+      "system": "Ours (theta=0.55, Aggressive Pruning)",
+      "total_probes": 60,
+      "correct_probes": 48,
+      "overall_accuracy_pct": 80.0,
+      "category_accuracy_pct": {
+        "single_hop_long_range": 93.33,
+        "fact_conflict_override": 60.0,
+        "temporal_historical_lineage": 93.33,
+        "multi_hop_graph_reasoning": 73.33
+      },
+      "conflict_resolution_precision_pct": 90.0,
+      "stale_conflict_leakage_pct": 0.0,
+      "avg_prompt_tokens": 75.5,
+      "p50_latency_ms": 6.145,
+      "p95_latency_ms": 7.577,
+      "failure_attribution": {
+        "missing_recall_evicted_or_unretrieved": 7,
+        "broken_multi_hop_chain": 3,
+        "wrong_or_incomplete_entity": 2
+      },
+      "sample_failures": [
+        {
+          "probe_id": "p1_co_3",
+          "category": "fact_conflict_override",
+          "question": "Which libraries does Alex Chen actively use now?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "PyTorch"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p1_mh_3",
+          "category": "multi_hop_graph_reasoning",
+          "question": "Which primary database does the project led by Alex Chen rely on?",
+          "prediction": "PostgreSQL",
+          "expected": [
+            "ClickHouse"
+          ],
+          "reason": "broken_multi_hop_chain"
+        },
+        {
+          "probe_id": "p2_co_3",
+          "category": "fact_conflict_override",
+          "question": "What is Su Yan's current dietary preference?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "Vegan"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        },
+        {
+          "probe_id": "p2_mh_1",
+          "category": "multi_hop_graph_reasoning",
+          "question": "Which organization is the collaborator on the project led by Su Yan affiliated with?",
+          "prediction": "Shanghai AI Lab",
+          "expected": [
+            "Zhejiang Lab"
+          ],
+          "reason": "broken_multi_hop_chain"
+        },
+        {
+          "probe_id": "p2_mh_2",
+          "category": "multi_hop_graph_reasoning",
+          "question": "Which library does the collaborator on Su Yan's project use?",
+          "prediction": "INSUFFICIENT_MEMORY",
+          "expected": [
+            "Triton"
+          ],
+          "reason": "missing_recall_evicted_or_unretrieved"
+        }
+      ],
+      "theta": 0.55,
+      "active_edges_retained": 18,
+      "active_edges_archived": 141,
+      "graph_compression_pct": 88.68,
+      "token_reduction_vs_full_pct": 92.75
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "graph-memory-engine"
+version = "0.1.0"
+description = "Hierarchical & Temporal Graph Long-Term Memory Engine with Conflict Resolution and Ebbinghaus Forgetting"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "AI Agent Portfolio Project 04 (F2)" }
+]
+dependencies = [
+    "pydantic>=2.6.0",
+    "aiosqlite>=0.20.0",
+    "numpy>=1.26.0",
+    "scipy>=1.12.0",
+    "scikit-learn>=1.4.0",
+    "httpx>=0.27.0",
+    "rich>=13.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+pythonpath = ["src"]
+addopts = "--basetemp=d:/aaacomputerlab/04-f2-graph-memory-engine/.pytest_tmp"
